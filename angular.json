@@ -65,7 +65,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
+                    "configurations": {
             "production": {
               "buildTarget": "twilio_angular:build:production"
             },
@@ -101,5 +101,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "40fd83d7-8992-467f-aeb4-16ed3ea8f720"
   }
 }
