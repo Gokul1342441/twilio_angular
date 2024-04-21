@@ -1,4 +1,8 @@
-
+<div>
+  <label for="username">Enter your username:</label>
+  <input type="text" id="username" name="username" [(ngModel)]="userName" (keyup.enter)="initiateVideoCall()">
+  <button (click)="initiateVideoCall()">Join Call</button>
+</div>
 <!-- In your component template (app.component.html) -->
 <div>
   <h1>Local</h1>

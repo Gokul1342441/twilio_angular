@@ -10,6 +10,7 @@ import { LocalVideoTrack } from 'twilio-video';
 })
 export class AppComponent {
 
+  userName: string = "";
   public token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzQyMWQwMGUyNzRhYjY5NjcyMzk1NzYzZmQ4YzhmZjBhLTE3MTM3MTI5MzYiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJHT0tVTCBSQUogIEsgViIsInZpZGVvIjp7InJvb20iOiJjMDgwZDYyMy0zNTI1LTRkMjQtOWJjYS04YjBmMDE0NTM0OGFfYmJkYmRkNzgtMWI0YS00YTRlLWJkNzUtNzU1N2UzZWZjMDM0XzUzZDgzMzY2LTI0ZjEtNGJjOS05MjI5LTQ2MDQ4MWQ1NzY4NSJ9fSwiaWF0IjoxNzEzNzEyOTM2LCJleHAiOjE3MTM3MTY1MzYsImlzcyI6IlNLNDIxZDAwZTI3NGFiNjk2NzIzOTU3NjNmZDhjOGZmMGEiLCJzdWIiOiJBQ2U3ZWFhOTkyOGUwYTcwYzU3MGFmMGVkNTQ4MDZjMWNmIn0.OWBhVYVU1TIHSRr-fd9dvfxJB0ZH9RPMIQPOmDX-dCE'; // Replace with your JWT token
   public roomName = 'c080d623-3525-4d24-9bca-8b0f0145348a_bbdbdd78-1b4a-4a4e-bd75-7557e3efc034_53d83366-24f1-4bc9-9229-460481d57685';
   @ViewChild('remoteVideo', { static: true }) remoteVideo!: ElementRef;
@@ -18,7 +19,18 @@ export class AppComponent {
   constructor(private twilioService: TwilioService) { }
 
   ngOnInit(): void {
-    this.initiateVideoCall();
+    // this.initiateVideoCall();
+  }
+
+  getUserName(): void {
+    const name = prompt('Please enter your name:');
+    if (name !== null && name.trim() !== '') {
+      this.userName = name;
+      this.initiateVideoCall();
+    } else {
+      // Handle empty or canceled input
+      this.getUserName();
+    }
   }
 
   initiateVideoCall(): void {
@@ -29,9 +41,8 @@ export class AppComponent {
       name: this.roomName,
     };
 
-    this.twilioService.connectToRoom(accessToken, options, this.localVideo, this.remoteVideo);
+    this.twilioService.connectToRoom(accessToken, options, this.localVideo, this.remoteVideo, this.userName);
   }
-
   
 
 }

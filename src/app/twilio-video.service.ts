@@ -1,7 +1,6 @@
 import { Injectable, ElementRef, Renderer2, RendererFactory2 } from '@angular/core';
 import { connect, RemoteParticipant, RemoteTrack, Room, RemoteTrackPublication, LocalTrack, LocalVideoTrack } from 'twilio-video';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
@@ -20,14 +19,14 @@ export class TwilioService {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
-  connectToRoom(accessToken: string, options: any, localVideo: ElementRef, remoteVideo: ElementRef): void {
+  connectToRoom(accessToken: string, options: any, localVideo: ElementRef, remoteVideo: ElementRef, userName:string): void {
     connect(accessToken, options).then(room => {
       console.log("Connected to Twilio Room:", room);
       this.roomObj = room;
 
       // Start local video if video option is enabled
       if (this.roomObj && options['video']) {
-        this.startLocalVideo(localVideo);
+        this.startLocalVideo(localVideo, userName);
       }
 
       // Handle participant events
@@ -58,17 +57,19 @@ export class TwilioService {
     });
   }
 
-  startLocalVideo(localVideo: ElementRef): void {
+  startLocalVideo(localVideo: ElementRef, userName: string): void {
     if (this.roomObj) {
       this.roomObj.localParticipant.videoTracks.forEach(publication => {
         console.log("Local video publication:", publication);
         const element = publication.track.attach();
         console.log("Local video track attached:", element);
         this.renderer.setStyle(element, 'width', '25%');
+        this.renderer.setAttribute(element, 'title', userName); // Set user's name as title attribute
         this.renderer.appendChild(localVideo.nativeElement, element);
       });
     }
   }
+  
 
   startScreenSharing(): Promise<void> {
     return navigator.mediaDevices.getDisplayMedia().then(stream => {
